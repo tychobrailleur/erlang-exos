@@ -16,8 +16,8 @@ get_file(Server, File) ->
             Content
     end.
 
-send_file(Server, Filename, Content) ->
-    Server ! { self(), {send_file, Filename, Content}},
+put_file(Server, Filename, Content) ->
+    Server ! { self(), {put_file, Filename, Content}},
     receive
         {Server, Response} ->
             Response

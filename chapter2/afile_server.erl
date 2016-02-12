@@ -10,9 +10,9 @@ loop(Dir) ->
             Client ! { self(), file:list_dir(Dir) };
         {Client, {get_file, File}} ->
             Full = filename:join(Dir, File),
-            Client ! { self(), file:read_file(Full)};
-        {Client, {send_file, File, Content}} ->
+            Client ! { self(), file:read_file(Full) };
+        {Client, {put_file, File, Content}} ->
             Full = filename:join(Dir, File),
-            Client ! { file:write_file(Full, Content) }
+            Client ! { self(), file:write_file(Full, Content) }
     end,
     loop(Dir).
