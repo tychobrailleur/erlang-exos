@@ -1,0 +1,12 @@
+{application, json_config,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { json_config, []}},
+  {env, []}
+ ]}.
