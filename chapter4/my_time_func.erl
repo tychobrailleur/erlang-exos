@@ -1,5 +1,5 @@
 -module(my_time_func).
--export([test/0, weekday/3, days_before_year/1]).
+-export([test/0, weekday/3]).
 
 test() ->
     my_time_func(timer, sleep, [1500]),
@@ -50,6 +50,13 @@ days_before_month(1, _, Days) ->
     Days;
 days_before_month(Month, Year, Days) ->
     days_before_month(Month-1, Year, days_in_month(Month, Year) + Days).
+
+-spec weekday(Day, Month, Year) -> weekday() when
+      Day :: pos_integer(),
+      Month :: month(),
+      Year :: pos_integer().
+-type month() :: 1..12.
+-type weekday() :: 1..7.
 
 weekday(Day, Month, Year) ->
     Weekday =  (days_before_year(Year) + days_before_month(Month, Year) + Day) rem 7,
