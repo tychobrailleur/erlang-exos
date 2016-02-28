@@ -7,6 +7,6 @@ test() ->
 
 packet_to_term(Packet) ->
     case Packet of
-        <<N:32, Term/binary>> ->
+        <<N:32, Term/binary>> when byte_size(Term) =:= N ->
             binary_to_term(Term)
     end.
