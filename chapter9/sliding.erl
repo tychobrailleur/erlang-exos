@@ -7,7 +7,12 @@ test() ->
     tests_worked.
 
 %% Returns a list holding a sliding window of the input list, and of size Size.
--spec sliding(list(), pos_integer()) -> list().
+-spec sliding(List1, Size) -> List2 when
+      List1 :: [T],
+      Size :: pos_integer(),
+      List2 :: [[T]],
+      T :: term().
+
 sliding(List, Size) ->
     sliding(List, Size, []).
 
