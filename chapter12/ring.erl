@@ -4,10 +4,10 @@
 
 test() ->
     N = 1000,
-    M = 5,
+    M = 10,
     Processes = lists:seq(0, N-1),
     [ register(node_name(Process), spawn(fun() -> ring_node(Process, 1, M, N) end)) || Process <- Processes ],
-    proc1 ! hello,
+    proc0 ! hello,
     done.
 
 node_name(Index) ->
