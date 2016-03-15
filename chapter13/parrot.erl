@@ -26,4 +26,4 @@ start() ->
 
 %% Try killing the peal_jam process with the following:
 %%
-%% ` xit(whereis(pearl_jam), kill).`
+%% `exit(whereis(pearl_jam), kill).`
