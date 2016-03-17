@@ -8,10 +8,11 @@ worker(Name) ->
     worker(Name).
 
 spawn_and_next([Worker|[]]) ->
-    io:format("LAst = ~p.~n", [Worker]),
-    Pid = spawn_link(?MODULE, worker, [Worker]),
-    register(Worker, Pid);
+    io:format("Last = ~p.~n", [Worker]),
+    register(Worker, self()),
+    worker(Worker);
 spawn_and_next([Worker|Rest]) ->
+    io:format("Next = ~p.~n", [Worker]),
     spawn_link(fun() -> spawn_and_next(Rest) end),
     register(Worker, self()),
     worker(Worker).
@@ -19,7 +20,8 @@ spawn_and_next([Worker|Rest]) ->
 monitor_killer_restarter(Workers) ->
     spawn_monitor(?MODULE, spawn_and_next, [Workers]),
     receive
-        { 'DOWN', _Ref, process, _Pid, _Why } ->
+        { 'DOWN', _Ref, process, Pid, _Why } ->
+            io:format("Process killed ~p.~n", [Pid]),
             monitor_killer_restarter(Workers)
     end.
 
