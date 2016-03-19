@@ -2,3 +2,5 @@
 ebin/
 erl_crash.dump
 *.pdf
+*.so
+example1
