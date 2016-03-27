@@ -1,7 +1,6 @@
-Attempt at writing Reminder app as described here:
-http://learnyousomeerlang.com/designing-a-concurrent-application
-
-without looking at reference implementation.
+Attempt at writing Reminder app as described [here](http://learnyousomeerlang.com/designing-a-concurrent-application)
+without looking at reference implementation.  Without code reload or
+worrying about limit in delay value.
 
 To execute:
 
