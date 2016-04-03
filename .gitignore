@@ -5,3 +5,4 @@ erl_crash.dump
 *.so
 example1
 *.dat
+Mnesia.pyjama@pyjama
