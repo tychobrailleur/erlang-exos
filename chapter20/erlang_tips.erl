@@ -1,12 +1,13 @@
 -module(erlang_tips).
--compile([export_all]).
+-export([init/0, setup_schema/0, add_user/3, get_user/1, list_users/0, add_tip/3, get_tip/1,
+         list_tips/0, get_abuse/1, add_abuse/2, list_abuse/0, delete_tables/0]).
 -include_lib("stdlib/include/qlc.hrl").
 
 -define(SALT_LENGTH, 12).
 
 -record(user, { email, name, password, salt }).
--record(tip, { url, description, review_date }).
--record(abuse, { ip, visit_number }).
+-record(tip, { url, description, review_date, user }).
+-record(abuse, { timestamp, ip, user }).
 
 
 init() ->
@@ -42,10 +43,47 @@ add_user(Name, Email, Password) ->
 
 get_user(Email) ->
     F = fun() -> mnesia:read(users, Email) end,
-    mnesia:transaction(F).
+    { atomic, Val } = mnesia:transaction(F),
+    Val.
 
 list_users() ->
     do(qlc:q([ {U#user.email, U#user.name} || U <- mnesia:table(users) ])).
+
+add_tip(Url, Description, User) ->
+    Row = #tip{url=Url, description=Description, user=User, review_date=erlang:localtime()},
+    F = fun() ->
+                mnesia:write(tips, Row, write)
+        end,
+    mnesia:transaction(F).
+
+get_tip(Url) ->
+    F = fun() -> mnesia:read(tip, Url) end,
+    { atomic, Val } = mnesia:transaction(F),
+    Val.
+
+list_tips() ->
+    do(qlc:q([ T || T <- mnesia:table(tips) ])).
+
+get_abuse(Ip) ->
+    F = fun() -> mnesia:read(abuse, Ip) end,
+    { atomic, Val } = mnesia:transaction(F),
+    Val.
+
+
+add_abuse(Ip, User) ->
+    Row = #abuse{timestamp=erlang:localtime(), ip=Ip, user=User},
+    F = fun() ->
+                mnesia:write(Row)
+        end,
+    mnesia:transaction(F).
+
+
+list_abuse() ->
+    do(qlc:q([ A || A <- mnesia:table(abuse) ])).
+
+
+delete_tables() ->
+    lists:foreach(fun(Table) -> mnesia:delete_table(Table) end, [abuse, tips, users]).
 
 do(Q) ->
     F = fun() -> qlc:e(Q) end,
