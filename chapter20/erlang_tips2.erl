@@ -10,6 +10,15 @@
 -record(abuse, { timestamp, ip, user }).
 
 
+%% erl -sname pantoufle -setcookie abc
+%% > net_kernel:connect('pyjama@pyjama.local').
+%% > mnesia:start().
+%%
+
+%% erl -sname pyjama -setcookie abc
+%% > mnesia:start().
+%% > erlang_tips2:setup_schema().
+
 init() ->
     random:seed(erlang:time_offset(),
                 erlang:monotonic_time(),
@@ -17,17 +26,15 @@ init() ->
 
 setup_schema() ->
     mnesia:create_schema([node(), 'pantoufle@pantoufle.home']),
-    mnesia:start(),
-    mnesia:create_table(users, [{disk_copies, [node(), 'pantoufle@pantoufle.home']},
+    mnesia:create_table(users, [{ram_copies, [node(), 'pantoufle@pantoufle.home']},
                                 {record_name, user},
                                 {attributes, record_info(fields, user)}]),
-    mnesia:create_table(tips, [{disk_copies, [node(), 'pantoufle@pantoufle.home']},
+    mnesia:create_table(tips, [{ram_copies, [node(), 'pantoufle@pantoufle.home']},
                                {record_name, tip},
                                {attributes, record_info(fields, tip)}]),
-    mnesia:create_table(abuse, [{disk_copies, [node(), 'pantoufle@pantoufle.home']},
+    mnesia:create_table(abuse, [{ram_copies, [node(), 'pantoufle@pantoufle.home']},
                                 {record_name, abuse},
-                                {attributes, record_info(fields, abuse)}]),
-    mnesia:stop().
+                                {attributes, record_info(fields, abuse)}]).
 
 random_string(Length) ->
     lists:map(fun(_) -> crypto:rand_uniform(48, 122) end, lists:seq(1, Length)).
