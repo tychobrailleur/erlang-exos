@@ -39,7 +39,7 @@ handle_call({ job_done, JobNumber }, _From, State) ->
     {reply, ok, State};
 handle_call({ work_request }, _From, #state{job_number=Num, jobs=Queue}) ->
     case orddict:size(Queue) > 0 of
-        true -> { Key, Val } = hd(lists:reverse(orddict:to_list(Queue))),
+        true -> { Key, Val } = hd(orddict:to_list(Queue)),
                 {reply, { work, { Key, Val } }, #state{job_number=Num, jobs=orddict:erase(Key, Queue)}};
         false ->
             {reply, { work, no }, #state{job_number=Num, jobs=Queue}}
